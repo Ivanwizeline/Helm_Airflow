@@ -1,0 +1,19 @@
+ENVIRONMENT: staging
+GENERATION: "1"
+AIRFLOW_WEB_HOST: airflow.k8s.data-org.staging.earnest.com
+AIRFLOW_IMAGE_REPOSITORY: earnest/data-airflow-dags
+AIRFLOW_IMAGE_TAG: 1.10.15.0.1505-5d89e96b
+AIRFLOW_WORKER_IMAGE_REPOSITORY: earnest/data-airflow-dags
+AIRFLOW_WORKER_IMAGE_TAG: staging
+AIRFLOW_LOGGING_LEVEL: INFO
+USE_VAULT: true
+VAULT_URL: "https://vault.staging.earnest.com"
+VAULT_PORT: "443"
+VAULT_KEY: airflow
+# Okta Integrations
+OKTA_ADMIN_USERNAME: 00um5385nqMfkzOSF0x7
+OKTA_ADMIN_EMAIL: sortigoza@earnest.com
+OKTA_ADMIN_FIRST_NAME: Saul
+OKTA_ADMIN_LAST_NAME: Ortigoza
+VALID_ISSUERS: "https://meetearnest.okta.com/oauth2/default,https://meetearnest.okta.com"
+AIRFLOW__KUBERNETES__DELETE_WORKER_PODS: True

@@ -1,0 +1,408 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    checksum/secret-config-envs: b6caea00e18011f6dbab043dd72d1b106ee6fad922b90b26398f2e77aa18618b
+    checksum/secret-local-settings: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+    checksum/sync-users-script: 8caa173b1df799c745becc439ca19f2c8527a10a91b735fb5a6252ffcd740018
+    cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
+  creationTimestamp: "2022-05-31T19:07:19Z"
+  generateName: data-airflow-2-sync-users-844f485476-
+  labels:
+    app: airflow
+    component: sync-users
+    pod-template-hash: 844f485476
+    release: data-airflow-2
+  name: data-airflow-2-sync-users-844f485476-tbp5c
+  namespace: airflow-2
+  ownerReferences:
+  - apiVersion: apps/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: ReplicaSet
+    name: data-airflow-2-sync-users-844f485476
+    uid: 35ac2f75-571b-4205-8a41-50370370fefc
+  resourceVersion: "376822"
+  uid: db9b3358-18c5-4e2c-a490-e608ac7f90de
+spec:
+  affinity: {}
+  containers:
+  - args:
+    - python
+    - -u
+    - /mnt/scripts/sync_users.py
+    command:
+    - /usr/bin/dumb-init
+    - --
+    - /entrypoint
+    env:
+    - name: DATABASE_USER
+      value: postgres
+    - name: DATABASE_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          key: postgresql-password
+          name: data-airflow-2-postgresql
+    - name: CONNECTION_CHECK_MAX_COUNT
+      value: "0"
+    envFrom:
+    - secretRef:
+        name: data-airflow-2-config-envs
+    image: earnest/airflow_2:2.2.5-f71bdc5-linux-amd64
+    imagePullPolicy: IfNotPresent
+    name: sync-airflow-users
+    resources: {}
+    securityContext:
+      runAsGroup: 0
+      runAsUser: 50000
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /opt/airflow/dags
+      name: dags-data
+    - mountPath: /opt/airflow/logs
+      name: logs-data
+    - mountPath: /mnt/scripts
+      name: scripts
+      readOnly: true
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-xgh72
+      readOnly: true
+  - env:
+    - name: GIT_SYNC_ROOT
+      value: /dags
+    - name: GIT_SYNC_DEST
+      value: repo
+    - name: GIT_SYNC_REPO
+      value: https://github.com/meetearnest/data-airflow-dags.git
+    - name: GIT_SYNC_BRANCH
+      value: main
+    - name: GIT_SYNC_REV
+      value: HEAD
+    - name: GIT_SYNC_DEPTH
+      value: "1"
+    - name: GIT_SYNC_WAIT
+      value: "60"
+    - name: GIT_SYNC_TIMEOUT
+      value: "120"
+    - name: GIT_SYNC_ADD_USER
+      value: "true"
+    - name: GIT_SYNC_MAX_SYNC_FAILURES
+      value: "0"
+    - name: GIT_KNOWN_HOSTS
+      value: "false"
+    - name: GIT_SYNC_USERNAME
+      valueFrom:
+        secretKeyRef:
+          key: username
+          name: airflow-http-git-secret
+    - name: GIT_SYNC_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          key: password
+          name: airflow-http-git-secret
+    - name: DATABASE_USER
+      value: postgres
+    - name: DATABASE_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          key: postgresql-password
+          name: data-airflow-2-postgresql
+    - name: CONNECTION_CHECK_MAX_COUNT
+      value: "0"
+    envFrom:
+    - secretRef:
+        name: data-airflow-2-config-envs
+    image: k8s.gcr.io/git-sync/git-sync:v3.5.0
+    imagePullPolicy: IfNotPresent
+    name: dags-git-sync
+    resources: {}
+    securityContext:
+      runAsGroup: 65533
+      runAsUser: 65533
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /dags
+      name: dags-data
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-xgh72
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  initContainers:
+  - env:
+    - name: GIT_SYNC_ONE_TIME
+      value: "true"
+    - name: GIT_SYNC_ROOT
+      value: /dags
+    - name: GIT_SYNC_DEST
+      value: repo
+    - name: GIT_SYNC_REPO
+      value: https://github.com/meetearnest/data-airflow-dags.git
+    - name: GIT_SYNC_BRANCH
+      value: main
+    - name: GIT_SYNC_REV
+      value: HEAD
+    - name: GIT_SYNC_DEPTH
+      value: "1"
+    - name: GIT_SYNC_WAIT
+      value: "60"
+    - name: GIT_SYNC_TIMEOUT
+      value: "120"
+    - name: GIT_SYNC_ADD_USER
+      value: "true"
+    - name: GIT_SYNC_MAX_SYNC_FAILURES
+      value: "0"
+    - name: GIT_KNOWN_HOSTS
+      value: "false"
+    - name: GIT_SYNC_USERNAME
+      valueFrom:
+        secretKeyRef:
+          key: username
+          name: airflow-http-git-secret
+    - name: GIT_SYNC_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          key: password
+          name: airflow-http-git-secret
+    - name: DATABASE_USER
+      value: postgres
+    - name: DATABASE_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          key: postgresql-password
+          name: data-airflow-2-postgresql
+    - name: CONNECTION_CHECK_MAX_COUNT
+      value: "0"
+    envFrom:
+    - secretRef:
+        name: data-airflow-2-config-envs
+    image: k8s.gcr.io/git-sync/git-sync:v3.5.0
+    imagePullPolicy: IfNotPresent
+    name: dags-git-clone
+    resources: {}
+    securityContext:
+      runAsGroup: 65533
+      runAsUser: 65533
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /dags
+      name: dags-data
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-xgh72
+      readOnly: true
+  - args:
+    - bash
+    - -c
+    - exec timeout 60s airflow db check
+    command:
+    - /usr/bin/dumb-init
+    - --
+    - /entrypoint
+    env:
+    - name: DATABASE_USER
+      value: postgres
+    - name: DATABASE_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          key: postgresql-password
+          name: data-airflow-2-postgresql
+    - name: CONNECTION_CHECK_MAX_COUNT
+      value: "0"
+    envFrom:
+    - secretRef:
+        name: data-airflow-2-config-envs
+    image: earnest/airflow_2:2.2.5-f71bdc5-linux-amd64
+    imagePullPolicy: IfNotPresent
+    name: check-db
+    resources: {}
+    securityContext:
+      runAsGroup: 0
+      runAsUser: 50000
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /opt/airflow/dags
+      name: dags-data
+    - mountPath: /opt/airflow/logs
+      name: logs-data
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-xgh72
+      readOnly: true
+  - args:
+    - bash
+    - -c
+    - exec airflow db check-migrations -t 60
+    command:
+    - /usr/bin/dumb-init
+    - --
+    - /entrypoint
+    env:
+    - name: DATABASE_USER
+      value: postgres
+    - name: DATABASE_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          key: postgresql-password
+          name: data-airflow-2-postgresql
+    - name: CONNECTION_CHECK_MAX_COUNT
+      value: "0"
+    envFrom:
+    - secretRef:
+        name: data-airflow-2-config-envs
+    image: earnest/airflow_2:2.2.5-f71bdc5-linux-amd64
+    imagePullPolicy: IfNotPresent
+    name: wait-for-db-migrations
+    resources: {}
+    securityContext:
+      runAsGroup: 0
+      runAsUser: 50000
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /opt/airflow/dags
+      name: dags-data
+    - mountPath: /opt/airflow/logs
+      name: logs-data
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-xgh72
+      readOnly: true
+  nodeName: docker-desktop
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext:
+    fsGroup: 0
+  serviceAccount: data-airflow-2
+  serviceAccountName: data-airflow-2
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - emptyDir: {}
+    name: dags-data
+  - emptyDir: {}
+    name: logs-data
+  - name: scripts
+    secret:
+      defaultMode: 420
+      secretName: data-airflow-2-sync-users
+  - name: kube-api-access-xgh72
+    projected:
+      defaultMode: 420
+      sources:
+      - serviceAccountToken:
+          expirationSeconds: 3607
+          path: token
+      - configMap:
+          items:
+          - key: ca.crt
+            path: ca.crt
+          name: kube-root-ca.crt
+      - downwardAPI:
+          items:
+          - fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+            path: namespace
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2022-05-31T19:07:19Z"
+    message: 'containers with incomplete status: [dags-git-clone check-db wait-for-db-migrations]'
+    reason: ContainersNotInitialized
+    status: "False"
+    type: Initialized
+  - lastProbeTime: null
+    lastTransitionTime: "2022-05-31T19:07:19Z"
+    message: 'containers with unready status: [sync-airflow-users dags-git-sync]'
+    reason: ContainersNotReady
+    status: "False"
+    type: Ready
+  - lastProbeTime: null
+    lastTransitionTime: "2022-05-31T19:07:19Z"
+    message: 'containers with unready status: [sync-airflow-users dags-git-sync]'
+    reason: ContainersNotReady
+    status: "False"
+    type: ContainersReady
+  - lastProbeTime: null
+    lastTransitionTime: "2022-05-31T19:07:19Z"
+    status: "True"
+    type: PodScheduled
+  containerStatuses:
+  - image: k8s.gcr.io/git-sync/git-sync:v3.5.0
+    imageID: ""
+    lastState: {}
+    name: dags-git-sync
+    ready: false
+    restartCount: 0
+    started: false
+    state:
+      waiting:
+        reason: PodInitializing
+  - image: earnest/airflow_2:2.2.5-f71bdc5-linux-amd64
+    imageID: ""
+    lastState: {}
+    name: sync-airflow-users
+    ready: false
+    restartCount: 0
+    started: false
+    state:
+      waiting:
+        reason: PodInitializing
+  hostIP: 192.168.65.4
+  initContainerStatuses:
+  - containerID: docker://060a7a71eaf647d60ae8746625b5935c3e078579986b0a755400828b1d3e6598
+    image: k8s.gcr.io/git-sync/git-sync:v3.5.0
+    imageID: docker-pullable://k8s.gcr.io/git-sync/git-sync@sha256:d16f5b2bca94cdbb4e40b256bfe639450a6f0577dbd8b3fcaf126a2261822fcd
+    lastState:
+      terminated:
+        containerID: docker://a6e1ba6a6b428ca1c9fb8bcf8100d7f1190b1fc24e5fe21b20e866aa1a7ec380
+        exitCode: 1
+        finishedAt: "2022-05-31T19:07:40Z"
+        reason: Error
+        startedAt: "2022-05-31T19:07:38Z"
+    name: dags-git-clone
+    ready: false
+    restartCount: 3
+    state:
+      terminated:
+        containerID: docker://060a7a71eaf647d60ae8746625b5935c3e078579986b0a755400828b1d3e6598
+        exitCode: 1
+        finishedAt: "2022-05-31T19:08:07Z"
+        reason: Error
+        startedAt: "2022-05-31T19:08:05Z"
+  - image: earnest/airflow_2:2.2.5-f71bdc5-linux-amd64
+    imageID: ""
+    lastState: {}
+    name: check-db
+    ready: false
+    restartCount: 0
+    state:
+      waiting:
+        reason: PodInitializing
+  - image: earnest/airflow_2:2.2.5-f71bdc5-linux-amd64
+    imageID: ""
+    lastState: {}
+    name: wait-for-db-migrations
+    ready: false
+    restartCount: 0
+    state:
+      waiting:
+        reason: PodInitializing
+  phase: Pending
+  podIP: 10.1.1.38
+  podIPs:
+  - ip: 10.1.1.38
+  qosClass: BestEffort
+  startTime: "2022-05-31T19:07:19Z"

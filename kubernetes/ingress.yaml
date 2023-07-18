@@ -1,0 +1,44 @@
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: data-airflow2-dags-web
+  namespace: airflow-2
+spec:
+  rules:
+  - host: airflow2.k8s.data-org.staging.earnest.com
+    http:
+      paths:
+      - backend:
+          serviceName: data-airflow-2-web
+          servicePort: web
+        pathType: ImplementationSpecific
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: airflow
+    chart: airflow-6.0.0
+    component: web
+    heritage: Tiller
+    release: data-airflow-dags
+  name: data-airflow2-dags-web
+  namespace: airflow-2
+spec:
+  ports:
+  - name: web
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: airflow
+    component: web
+    release: data-airflow-2
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

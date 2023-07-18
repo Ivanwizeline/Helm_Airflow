@@ -1,0 +1,37 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-storage
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+# ---
+# kind: PersistentVolume
+# apiVersion: v1
+# metadata:
+#   name: airflow-logs-pvc
+# spec:
+#   accessModes:
+#     - ReadWriteMany
+#   capacity:
+#     storage: 1Gi
+#   hostPath:
+#     path: /opt/airflow/logs/
+#   storageClassName: gp2
+# ---
+# kind: PersistentVolumeClaim
+# apiVersion: v1
+# metadata:
+#   name: airflow-logs-pvc
+#   namespace: airflow-2
+#     annotations:
+#       volume.beta.kubernetes.io/storage-class: "local" efs
+# spec:
+#   accessModes:
+#     - ReadWriteMany
+#   resources:
+#     requests:
+#       #EFS scales automatically, but we still need to define
+#       #the requested storage to be compliant with the API, so
+#       #its value has no effect.
+#       storage: 1Gi
+#   storageClassName : gp2

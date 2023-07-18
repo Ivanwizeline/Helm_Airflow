@@ -1,0 +1,20 @@
+ENVIRONMENT: development
+GENERATION: "1"
+AIRFLOW_WEB_HOST: airflow-k8s-de.data-org.earnest.io
+# TODO: once the new images are built by Jenkins update this.
+AIRFLOW_IMAGE_REPOSITORY: earnest/data-airflow-dags
+AIRFLOW_IMAGE_TAG: 1.10.15.0.1505-5d89e96b
+AIRFLOW_WORKER_IMAGE_REPOSITORY: earnest/data-airflow-dags
+AIRFLOW_WORKER_IMAGE_TAG: development
+AIRFLOW_LOGGING_LEVEL: INFO
+USE_VAULT: true
+VAULT_URL: "http://vault.default.svc.cluster.local"
+VAULT_PORT: "9000"
+VAULT_KEY: airflow
+# Okta Integrations
+OKTA_ADMIN_USERNAME: 00uo9hbp4okr5blLI356
+OKTA_ADMIN_EMAIL: sortigoza@earnest.com
+OKTA_ADMIN_FIRST_NAME: Saul
+OKTA_ADMIN_LAST_NAME: Ortigoza
+VALID_ISSUERS: "https://dev-941387.okta.com/oauth2/default,https://dev-941387.okta.com"
+AIRFLOW__KUBERNETES__DELETE_WORKER_PODS: True

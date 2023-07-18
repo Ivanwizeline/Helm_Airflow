@@ -1,0 +1,8 @@
+releases:
+  - name: data-airflow-2
+    namespace: airflow-2
+    chart: airflow-stable/airflow
+    # ref. https://github.com/helm/charts/tree/be4fd6c25b0640327a9f54c0b6dfa1ee6dd4a2df/stable/airflow
+    version: 8.6.0
+    # values:
+    #   - values/data_airflow_dags.yaml.gotmpl
