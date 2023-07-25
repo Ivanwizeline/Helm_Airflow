@@ -1,0 +1,28 @@
+hvac==0.10
+yq==2.10.0
+pygsheets==2.0.5
+pandas==1.5.3 #modified 
+SQLAlchemy==1.4.46 #modified
+pyjwt==2.5.0 #modified
+snowflake-connector-python==2.9.0 # modified
+snowflake-sqlalchemy==1.4.4 #modified
+requests==2.26.0
+idna==2.10
+cryptography==3.3.2
+aiohttp==3.8.1
+networkx==2.8.2
+pydantic==1.9.1
+rsa>=4.7 # not directly required, pinned by Snyk to avoid a vulnerability
+pmdarima==2.0.3 # modified
+jinja2==3.0.3
+s3fs==0.4.0
+statsmodels==0.13.2
+pyarrow==10.0.1
+typing-extensions>=4.0.1
+# included in the base airflow image [https://github.com/meetearnest/docker-images/tree/master/images/airflow]:
+# boto3==1.15.0
+# botocore==1.18.0
+urllib3==1.25.11
+# jaydebeapi==1.2.3
+scikit-learn==1.0.2
+apache-airflow-providers-amazon==8.3.1

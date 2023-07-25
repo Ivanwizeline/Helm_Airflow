@@ -1,0 +1,31 @@
+{{- if eq (default .Values.dags_persistence false) true -}}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: dags-pvc
+  namespace: {{ .Values.namespace }} 
+  labels:
+    type: local
+spec:
+  storageClassName: hostpath
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadOnlyMany
+  hostPath:
+    path: {{ .Values.dags_local_path }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dags-pvc
+  namespace: {{ .Values.namespace }}
+spec:
+  storageClassName: hostpath
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 1Gi
+  volumeName: dags-pvc
+{{ end }}
